@@ -1,0 +1,47 @@
+{
+  "name": "koa-sav",
+  "version": "1.0.0",
+  "description": "sav middleware for koa",
+  "main": "src/index.js",
+  "scripts": {
+    "bss": "browser-sync start",
+    "bsr": "browser-sync reload",
+    "svr": "node .",
+    "mon": "set PORT=8000 && nodemon --ext \"js json html\" --exec \"npm run bsr && npm run svr\"",
+    "start": "npm-run-all -p mon bss",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/savjs/koa-sav.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/savjs/koa-sav/issues"
+  },
+  "homepage": "https://github.com/savjs/koa-sav#readme",
+  "devDependencies": {
+    "babel-plugin-external-helpers": "^6.18.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-polyfill": "^6.20.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-es2015-rollup": "^3.0.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "babel-register": "^6.18.0",
+    "browser-sync": "^2.18.5",
+    "cross-env": "^3.1.3",
+    "koa": "^2.0.0-alpha.7",
+    "koa-bodyparser": "^3.2.0",
+    "koa-logger": "^2.0.0",
+    "koa-router": "^7.0.1",
+    "nodemon": "^1.11.0",
+    "npm-run-all": "^3.1.2",
+    "rollup": "^0.37.0",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-commonjs": "^6.0.0",
+    "rollup-plugin-node-resolve": "^2.0.0",
+    "sav-schema": "0.0.7"
+  }
+}
