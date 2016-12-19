@@ -21,9 +21,10 @@ export default {
   plugins: [
     babel({
       babelrc: false,
-      externalHelpers: true,
+      externalHelpers: false,
       exclude: 'node_modules/**',
       "presets": [
+        "es2015-rollup",
         "stage-0",
         "react"
       ],
