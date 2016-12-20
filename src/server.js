@@ -14,7 +14,8 @@ const route = new Router()
 const UserSchema = schema.declare({
   name: 'UserSchema',
   props: {
-    name: String
+    username: String,
+    password: String,
   }
 })
 
@@ -23,7 +24,13 @@ function loadView(view) {
     fs.readFile(`${__dirname}/views/${view}.html`, (err, buf)=>{
       if (err)
         return reject(err)
-      return resolve(buf.toString())
+      buf = buf.toString()
+      buf = buf.replace('<!--browser-sync-->',`
+<script id="__bs_script__">
+  document.write(['<s','cript ', 'async src="http://', location.hostname, ':3000/browser-sync/browser-sync-client.js?v=2.18.5">','</s','cript>' ].join(''));
+</script>
+  `)
+      return resolve(buf)
     })
   })
 }
@@ -45,21 +52,62 @@ NestingRoute.get('/nest/:helo', async ({prop, ctx, all, setState, schema, query}
 
 route.use(NestingRoute.routes(), NestingRoute.allowedMethods())
 
-function extractStruct({struct}) {
+function extractStruct({struct, target = ''}) {
   return async ({ctx}, next) => {
+    const input = {
+      ...ctx.query, 
+      ...ctx.request.body, 
+      ...ctx.params
+    }
+    const ret = await struct.extractThen(input)
+    ctx.UserSchema = ret
     await next()
   }
 }
 
-route.get('/', 
-  extractStruct({struct: UserSchema}), 
-  async ({prop, ctx, all, setState, schema, query}) => {
-    let str = await all([loadView('index')])
-    // console.log(schema.UserSchema.extract(query))
-    setState({a:1}, {b:2})
-    console.log(ctx.state)
-    ctx.body = str[0]
+function renderView(view) {
+  return (ctx) => loadView(view).then((html) => ctx.body = html)
+}
+
+async function twait (p) {
+  try {
+    return [null, await(p) ]
+  } catch (err) {
+    return [err]
+  }
+}
+
+route.get('/account/login', renderView('login'))
+route.post('/account/login', async function ({ctx}) {
+  const input = {
+    ...ctx.query, 
+    ...ctx.request.body, 
+    ...ctx.params
+  }
+  console.log('query', ctx.query)
+  console.log('body', ctx.request.body)
+  console.log('params', ctx.params)
+  let [err, ret] = await twait(UserSchema.extractThen(input))
+  if (ret) {
+    if (ret.username === ret.password) {
+      console.log('logined')
+      return ctx.redirect('/')
+    }
+  }
+  return loadView('login').then((html)=>ctx.body=html.replace('<!-- ERROR_INFO -->', "用户名和密码不相等"))
 })
+
+route.get('/', renderView('index'))
+
+// route.get('/', 
+//   extractStruct({struct: UserSchema}), 
+//   async ({prop, ctx, all, setState, schema, query}) => {
+//     let str = await all([loadView('index')])
+//     // console.log(schema.UserSchema.extract(query))
+//     setState({a:1}, {b:2})
+//     console.log(ctx.state)
+//     ctx.body = str[0]
+// })
 
 function initSchema({prop}) {
   prop('schema', schema)
