@@ -7,7 +7,7 @@
     "bss": "browser-sync start",
     "bsr": "browser-sync reload",
     "svr": "node .",
-    "mon": "set PORT=8000 && nodemon --ext \"js json html\" --exec \"npm run bsr && npm run svr\"",
+    "mon": "set PORT=8000 && cd src && nodemon --ext \"js json html\" --exec \"npm run bsr && npm run svr\"",
     "start": "npm-run-all -p mon bss",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

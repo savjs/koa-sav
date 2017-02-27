@@ -24,9 +24,7 @@ export default {
       externalHelpers: false,
       exclude: 'node_modules/**',
       "presets": [
-        "es2015-rollup",
-        "stage-0",
-        "react"
+        "stage-3"
       ],
       "plugins": [
         "transform-decorators-legacy",
